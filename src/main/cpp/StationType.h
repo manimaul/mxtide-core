@@ -17,6 +17,9 @@ namespace mdr {
                     return "tide";
             }
         }
+        bool equals(libxtide::StationRef* ref) {
+            return (ref->isCurrent && type == current) || (!ref->isCurrent && type == tide);
+        }
     };
 
     static const StationType stationTypeTide = StationType { StationType::Type::tide };

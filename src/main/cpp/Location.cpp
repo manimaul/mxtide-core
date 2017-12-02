@@ -5,11 +5,11 @@
 #include "Location.h"
 #include <cmath>
 
-LocationInfo Location::calculateLocationInfo(LocationInfo &locationInfo,
-                                             double lat1,
-                                             double lon1,
-                                             double lat2,
-                                             double lon2) {
+void Location::calculateLocationInfo(struct LocationInfo &locationInfo,
+                                     double lat1,
+                                     double lon1,
+                                     double lat2,
+                                     double lon2) {
 
     /*
      * Based on http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf

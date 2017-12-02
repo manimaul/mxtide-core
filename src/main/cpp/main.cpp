@@ -34,17 +34,29 @@ int main(int argc, char** argv) {
         auto tnc = TidesAndCurrents();
         tnc.addHarmonicsFile(path);
 
-        cout << "station count:" << tnc.stationCount() << endl;
-        cout << "names:" << tnc.stationNames().back() << endl;
+        double lat = 47;
+        double lng = -122;
+        double radius = 100000;
+        auto stations = tnc.findStationIn(lat, lng, radius, stationTypeTide);
 
-        {
-            auto station = tnc.getStation("San Diego Bay Entrance, California Current");
-            printStationInformation(station);
-        }
-        {
-            auto station = tnc.getStation("station does not exist");
-            printStationInformation(station);
-        }
+        auto nearestTide = tnc.findNearestStation(lat, lng, stationTypeTide);
+        printStationInformation(nearestTide);
+        auto nearestCurrent = tnc.findNearestStation(lat, lng, stationTypeCurrent);
+        printStationInformation(nearestCurrent);
+
+//        cout << "station count:" << stations.size() << endl;
+
+//        cout << "station count:" << tnc.stationCount() << endl;
+//        cout << "names:" << tnc.stationNames().back() << endl;
+
+//        {
+//            auto station = tnc.getStation("San Diego Bay Entrance, California Current");
+//            printStationInformation(station);
+//        }
+//        {
+//            auto station = tnc.getStation("station does not exist");
+//            printStationInformation(station);
+//        }
 
         exit(EXIT_SUCCESS);
     } else {
