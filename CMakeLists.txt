@@ -8,12 +8,17 @@ set(xtide_DIR ${LIB_DIR})
 find_package(xtide REQUIRED)
 
 set(SOURCE_SET
-        src/main/cpp/LibXtide.cpp
-        src/main/cpp/LibXtide.h
-        src/main/cpp/Unit.h
-        src/main/cpp/Station.h)
+        src/main/cpp/TidesAndCurrents.cpp
+        src/main/cpp/TidesAndCurrents.h
+        src/main/cpp/MeasureUnit.h
+        src/main/cpp/Station.h
+        src/main/cpp/Station.cpp
+        src/main/cpp/StationType.h
+        src/main/cpp/StationPrediction.h
+        src/main/cpp/Location.cpp
+        src/main/cpp/Location.h)
 
-set(LINK_LIBS andxtide xtide)
+set(LINK_LIBS mxtide xtide)
 
 if (ANDROID)
     find_library(log-lib log)
@@ -22,12 +27,12 @@ if (ANDROID)
             src/main/cpp/AndXTideLib.hh
             )
     set(LINK_LIBS ${LINK_LIBS} ${log-lib})
-    add_library(andxtide SHARED ${SOURCE_SET})
+    add_library(mxtide SHARED ${SOURCE_SET})
 else ()
     set(SOURCE_SET ${SOURCE_SET}
             src/main/cpp/main.cpp
             )
-    add_executable(andxtide ${SOURCE_SET})
+    add_executable(mxtide ${SOURCE_SET})
 endif ()
 
 
