@@ -31,6 +31,7 @@ if (ANDROID)
 else ()
     set(SOURCE_SET ${SOURCE_SET}
             src/main/cpp/main.cpp
+            src/main/cpp/PerfTimer.h
             )
     add_executable(mxtide ${SOURCE_SET})
 endif ()

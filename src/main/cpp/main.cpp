@@ -1,5 +1,6 @@
 #include <iostream>
 #include "TidesAndCurrents.h"
+#include "PerfTimer.h"
 
 using namespace mdr;
 using namespace std;
@@ -32,17 +33,32 @@ int main(int argc, char** argv) {
     if (argc == 2) {
         auto path = string(argv[1]);
         auto tnc = TidesAndCurrents();
+        auto pt = PerfTimer();
         tnc.addHarmonicsFile(path);
+        pt.stop("adding harmonics");
+
+        pt.resetStart();
+        auto waStations = tnc.findStationInBounds(49, -117, 45.4, -125, stationTypeTide);
+        pt.stop("finding WA region stations");
+        cout << "WA region stations: " << waStations.size() << endl;
+//        for_each(waStations.begin(), waStations.end(), [](Station &station) {
+           //cout << "station name: " << station.name() << endl;
+//        });
 
         double lat = 47;
         double lng = -122;
         double radius = 100000;
+        pt.resetStart();
         auto stations = tnc.findStationIn(lat, lng, radius, stationTypeTide);
+        pt.stop("finding stations with radius");
 
+        pt.resetStart();
         auto nearestTide = tnc.findNearestStation(lat, lng, stationTypeTide);
-        printStationInformation(nearestTide);
+        pt.stop("finding nearest tide station");
+
+//        printStationInformation(nearestTide);
         auto nearestCurrent = tnc.findNearestStation(lat, lng, stationTypeCurrent);
-        printStationInformation(nearestCurrent);
+//        printStationInformation(nearestCurrent);
 
 //        cout << "station count:" << stations.size() << endl;
 

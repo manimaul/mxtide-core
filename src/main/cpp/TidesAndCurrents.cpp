@@ -2,6 +2,8 @@
 #include "TidesAndCurrents.h"
 #include "Location.h"
 
+#define EARTH_CIRCUMFERENCE_METERS 40.75e6
+
 using namespace mdr;
 using namespace std;
 
@@ -49,7 +51,7 @@ shared_ptr<Station> TidesAndCurrents::getStation(const char *name) {
 
 std::shared_ptr<Station> TidesAndCurrents::findNearestStation(double lat, double lng, StationType type) {
     auto locationInfo = LocationInfo {};
-    auto closest = std::pair<libxtide::StationRef *, double> {nullptr, 40.75e6}; // earth circumference in meters
+    auto closest = std::pair<libxtide::StationRef *, double> {nullptr, EARTH_CIRCUMFERENCE_METERS};
 
     for_each(stationIndex->begin(), stationIndex->end(), [&](libxtide::StationRef *ref) {
         Location::calculateLocationInfo(locationInfo, lat, lng, ref->coordinates.lat(), ref->coordinates.lng());
@@ -92,6 +94,15 @@ TidesAndCurrents::findStationInBounds(double northLat,
                                       double southLat,
                                       double westLng,
                                       StationType type) {
-    //todo:
-    return vector<Station>();
+    vector<libxtide::StationRef *> stationRefs;
+    copy_if(stationIndex->begin(), stationIndex->end(), back_inserter(stationRefs), [&](libxtide::StationRef *ref) {
+        double lat = ref->coordinates.lat();
+        double lng = ref->coordinates.lng();
+        return type.equals(ref) && lat >= southLat && lat <= northLat && lng >= westLng && lng <= eastLng;
+    });
+    vector<Station> results;
+    transform(stationRefs.begin(), stationRefs.end(), back_inserter(results), [](libxtide::StationRef *ref) -> Station {
+        return Station(ref);
+    });
+    return results;
 }

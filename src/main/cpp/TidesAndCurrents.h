@@ -40,6 +40,16 @@ namespace mdr {
                                            double radiusMeters,
                                            StationType type);
 
+        /**
+         * Find stations within a bounding box. Note: the bounding box cannot span the international dateline.
+         *
+         * @param northLat the north most latitude
+         * @param eastLng the east most longitude
+         * @param southLat the south most latitude
+         * @param westLng the west most longitude
+         * @param type the station type
+         * @return a list of stations within the specified bounds.
+         */
         std::vector<Station> findStationInBounds(double northLat,
                                                  double eastLng,
                                                  double southLat,

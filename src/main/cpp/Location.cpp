@@ -1,7 +1,3 @@
-//
-// Created by Willard Kamp on 12/1/17.
-//
-
 #include "Location.h"
 #include <cmath>
 
