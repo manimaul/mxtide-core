@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
         pt.stop("finding WA region stations");
         cout << "WA region stations: " << waStations.size() << endl;
 //        for_each(waStations.begin(), waStations.end(), [](Station &station) {
-           //cout << "station name: " << station.name() << endl;
+//           cout << "station name: " << station.name() << endl;
 //        });
 
         double lat = 47;
@@ -55,6 +55,23 @@ int main(int argc, char** argv) {
         pt.resetStart();
         auto nearestTide = tnc.findNearestStation(lat, lng, stationTypeTide);
         pt.stop("finding nearest tide station");
+
+        pt.resetStart();
+        nearestTide->getPredictionRaw();
+        pt.stop("nearest station raw");
+
+        pt.resetStart();
+        nearestTide->getPredictionRaw();
+        pt.stop("nearest station raw subsequent");
+
+        pt.resetStart();
+        auto nearestByName = tnc.getStation(nearestTide->name().c_str());
+        pt.stop("nearest station re-fetched by name");
+
+        pt.resetStart();
+        nearestByName->getPredictionRaw();
+        pt.stop("nearest station re-fetched raw subsequent");
+
 
 //        printStationInformation(nearestTide);
         auto nearestCurrent = tnc.findNearestStation(lat, lng, stationTypeCurrent);

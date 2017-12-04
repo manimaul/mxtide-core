@@ -6,7 +6,12 @@ using namespace std;
 using namespace mdr;
 using namespace std::chrono;
 
-Station::Station(libxtide::StationRef *stationRef) : station(stationRef->load()) {}
+Station::Station(libxtide::StationRef *stationRef) : stationRef(stationRef) {}
+
+Station::Station(Station &&other) noexcept {
+    station = other.station;
+    other.station = nullptr;
+}
 
 vector<string> split(const char* str, char delimiter) {
     auto tokens = vector<string>();
@@ -19,11 +24,11 @@ vector<string> split(const char* str, char delimiter) {
 }
 
 const double Station::getLatitude() {
-    return station->coordinates.lat();
+    return stationRef->coordinates.lat();
 }
 
 const double Station::getLongitude() {
-    return station->coordinates.lng();
+    return stationRef->coordinates.lng();
 }
 
 TimePoint Station::now() {
@@ -36,32 +41,32 @@ DurationSeconds Station::twentyFourHours() {
 }
 
 const string Station::timeZone() {
-    return string(station->timezone.aschar());
+    return string(stationRef->timezone.aschar());
 }
 
 const string Station::name() {
-    return string(station->name.aschar());
+    return string(stationRef->name.aschar());
 }
 
 string Station::getTimeStamp(TimePoint epoch)  {
     auto t = libxtide::Timestamp(SystemClock::to_time_t(epoch));
     auto s = Dstr{};
-    t.print(s, station->timezone);
+    t.print(s, stationRef->timezone);
     return s.aschar();
 }
 
 vector<StationPrediction<float>> Station::getPredictionRaw(TimePoint epoch, DurationSeconds duration, MeasureUnit unit) {
     switch (unit) {
         case meters:
-            station->setUnits(libxtide::Units::meters);
+            getStation()->setUnits(libxtide::Units::meters);
         case feet:
-            station->setUnits(libxtide::Units::feet);
+            getStation()->setUnits(libxtide::Units::feet);
     }
     auto start = libxtide::Timestamp(SystemClock::to_time_t(epoch));
     auto end = libxtide::Timestamp(SystemClock::to_time_t(epoch + duration));
     Dstr dstr = {};
 
-    station->print(dstr, start, end, libxtide::Mode::raw, libxtide::Format::text);
+    getStation()->print(dstr, start, end, libxtide::Mode::raw, libxtide::Format::text);
     auto lines = split(dstr.aschar(), '\n');
 
     vector<StationPrediction<float>> predictionData;
@@ -78,15 +83,15 @@ vector<StationPrediction<float>> Station::getPredictionRaw(TimePoint epoch, Dura
 vector<StationPrediction<string>> Station::getPredictionPlain(TimePoint epoch, DurationSeconds duration, MeasureUnit unit) {
     switch (unit) {
         case meters:
-            station->setUnits(libxtide::Units::meters);
+            getStation()->setUnits(libxtide::Units::meters);
         case feet:
-            station->setUnits(libxtide::Units::feet);
+            getStation()->setUnits(libxtide::Units::feet);
     }
     auto start = libxtide::Timestamp(SystemClock::to_time_t(epoch));
     auto end = libxtide::Timestamp(SystemClock::to_time_t(epoch + duration));
     Dstr dstr = {};
 
-    station->print(dstr, start, end, libxtide::Mode::plain, libxtide::Format::CSV);
+    getStation()->print(dstr, start, end, libxtide::Mode::plain, libxtide::Format::CSV);
     auto lines = split(dstr.aschar(), '\n');
     vector<StationPrediction<string>> predictionData;
     transform(lines.begin(), lines.end(), back_inserter(predictionData), [](string &str) -> StationPrediction<string> {
@@ -102,7 +107,7 @@ vector<StationPrediction<string>> Station::getPredictionPlain(TimePoint epoch, D
 }
 
 StationType Station::type() {
-    if (station->isCurrent) {
+    if (getStation()->isCurrent) {
         return stationTypeCurrent;
     } else {
         return stationTypeTide;
@@ -112,13 +117,24 @@ StationType Station::type() {
 string Station::getPredictionClockSVG(TimePoint epoch, DurationSeconds duration, MeasureUnit unit) {
     switch (unit) {
         case meters:
-            station->setUnits(libxtide::Units::meters);
+            getStation()->setUnits(libxtide::Units::meters);
         case feet:
-            station->setUnits(libxtide::Units::feet);
+            getStation()->setUnits(libxtide::Units::feet);
     }
     auto start = libxtide::Timestamp(SystemClock::to_time_t(epoch));
     auto end = libxtide::Timestamp(SystemClock::to_time_t(epoch + duration));
     Dstr dstr = {};
-    station->print(dstr, start, end, libxtide::Mode::graph, libxtide::Format::SVG);
+    getStation()->print(dstr, start, end, libxtide::Mode::graph, libxtide::Format::SVG);
     return dstr.aschar();
+}
+
+libxtide::Station *Station::getStation() {
+    if (nullptr == station) {
+        station = stationRef->load();
+    }
+    return station;
+}
+
+Station::~Station() {
+    delete station;
 }

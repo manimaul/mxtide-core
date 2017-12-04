@@ -20,10 +20,14 @@ namespace mdr {
     class Station {
 
     private:
-        std::unique_ptr<libxtide::Station> station{};
+        libxtide::StationRef* stationRef;
+        libxtide::Station* station = nullptr;
+        libxtide::Station* getStation();
 
     public:
         explicit Station(libxtide::StationRef *stationRef);
+        Station(Station &&station) noexcept;
+        virtual ~Station();
 
         static TimePoint now();
 
