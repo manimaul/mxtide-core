@@ -8,11 +8,6 @@ using namespace std::chrono;
 
 Station::Station(libxtide::StationRef *stationRef) : stationRef(stationRef) {}
 
-Station::Station(Station &&other) noexcept {
-    station = other.station;
-    other.station = nullptr;
-}
-
 vector<string> split(const char* str, char delimiter) {
     auto tokens = vector<string>();
     string token;

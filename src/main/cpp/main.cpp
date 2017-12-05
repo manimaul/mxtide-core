@@ -5,26 +5,27 @@
 using namespace mdr;
 using namespace std;
 
-void printStationInformation(Station &station) {
-    cout << "Station name: " << station.name() << endl;
-    cout << "Station tz: " << station.timeZone() << endl;
-    cout << "Station type: " << station.type().toString() << endl;
-    cout << "Station latitude: " << station.getLatitude() << " longitude: " << station.getLongitude() << endl;
-    cout << "Station timestamp" << station.getTimeStamp() << endl;
+void printStationInformation(Optional<Station> &station) {
+    station.let([] (Station &station) {
+        cout << "Station name: " << station.name() << endl;
+        cout << "Station tz: " << station.timeZone() << endl;
+        cout << "Station type: " << station.type().toString() << endl;
+        cout << "Station latitude: " << station.getLatitude() << " longitude: " << station.getLongitude() << endl;
+        cout << "Station timestamp" << station.getTimeStamp() << endl;
 
-    auto plainPrediction = station.getPredictionPlain();
-    cout << "Station plain prediction: " << endl;
-    for_each(plainPrediction.begin(), plainPrediction.end(), [](StationPrediction<string> &data) {
-        cout << data.formatTime() << " ------value-----> " << data.value << endl;
+        auto plainPrediction = station.getPredictionPlain();
+        cout << "Station plain prediction: " << endl;
+        for_each(plainPrediction.begin(), plainPrediction.end(), [](StationPrediction<string> &data) {
+            cout << data.formatTime() << " ------value-----> " << data.value << endl;
+        });
+
+        auto rawPrediction = station.getPredictionRaw();
+        cout << "Station raw prediction: " << endl;
+        for_each(rawPrediction.begin(), rawPrediction.end(), [](StationPrediction<float> &data) {
+            cout << data.formatTime() << " ------value-----> " << data.value << endl;
+        });
+        cout << "Station clock prediction SVG: " << station.getPredictionClockSVG() << endl;
     });
-
-    auto rawPrediction = station.getPredictionRaw();
-    cout << "Station raw prediction: " << endl;
-    for_each(rawPrediction.begin(), rawPrediction.end(), [](StationPrediction<float> &data) {
-        cout << data.formatTime() << " ------value-----> " << data.value << endl;
-    });
-
-//        cout << "Station clock prediction SVG: " << station->getPredictionClockSVG() << endl;
 }
 
 int main(int argc, char **argv) {
@@ -38,10 +39,10 @@ int main(int argc, char **argv) {
         pt.resetStart();
         auto waStations = tnc.findStationInBounds(49, -117, 45.4, -125, stationTypeTide);
         pt.stop("finding WA region stations");
-        cout << "WA region stations: " << waStations.size() << endl;
-//        for_each(waStations.begin(), waStations.end(), [](Station &station) {
-//           cout << "station name: " << station.name() << endl;
-//        });
+        cout << "WA region stations found: " << waStations.size() << endl;
+        for_each(waStations.begin(), waStations.end(), [](Station &station) {
+           cout << "station name: " << station.name() << endl;
+        });
 
         double lat = 47;
         double lng = -122;
@@ -85,26 +86,23 @@ int main(int argc, char **argv) {
             pt.stop("nearest by name station was empty");
         });
 
-
-
-//        nearestTide
-//        printStationInformation(nearestTide);
+        printStationInformation(nearestTide);
         auto nearestCurrent = tnc.findNearestStation(lat, lng, stationTypeCurrent);
-//        printStationInformation(nearestCurrent);
+        printStationInformation(nearestCurrent);
 
-//        cout << "station count:" << stations.size() << endl;
+        cout << "station count:" << stations.size() << endl;
 
-//        cout << "station count:" << tnc.stationCount() << endl;
-//        cout << "names:" << tnc.stationNames().back() << endl;
+        cout << "station count:" << tnc.stationCount() << endl;
+        cout << "names:" << tnc.stationNames().back() << endl;
 
-//        {
-//            auto station = tnc.getStation("San Diego Bay Entrance, California Current");
-//            printStationInformation(station);
-//        }
-//        {
-//            auto station = tnc.getStation("station does not exist");
-//            printStationInformation(station);
-//        }
+        {
+            auto station = tnc.getStation("San Diego Bay Entrance, California Current");
+            printStationInformation(station);
+        }
+        {
+            auto station = tnc.getStation("station does not exist");
+            printStationInformation(station);
+        }
 
         exit(EXIT_SUCCESS);
     } else {

@@ -27,7 +27,7 @@ namespace mdr {
     public:
         Station() = default;
         Station(Station &station) = default;
-        Station(Station &&station) noexcept;
+        Station(Station &&station) = default;
         explicit Station(libxtide::StationRef *stationRef);
         virtual ~Station();
 
