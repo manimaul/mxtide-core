@@ -32,9 +32,9 @@ namespace mdr {
 
         Optional<Station> getStation(const char *name);
 
-        std::shared_ptr<Station> findNearestStation(double lat,
-                                                    double lng,
-                                                    StationType type);
+        Optional<Station> findNearestStation(double lat,
+                                             double lng,
+                                             StationType type);
 
         std::vector<Station> findStationIn(double centerLat,
                                            double centerLng,

@@ -55,15 +55,22 @@ int main(int argc, char **argv) {
         pt.stop("finding nearest tide station");
 
         pt.resetStart();
-        nearestTide->getPredictionRaw();
-        pt.stop("nearest station raw");
+
+        nearestTide.let([&](Station &station) {
+            station.getPredictionRaw();
+            pt.stop("nearest station raw");
+        });
+
+        string nearestTideName = {};
+        nearestTide.let([&](Station &station) {
+            pt.resetStart();
+            station.getPredictionRaw();
+            pt.stop("nearest station raw subsequent");
+            nearestTideName = station.name();
+        });
 
         pt.resetStart();
-        nearestTide->getPredictionRaw();
-        pt.stop("nearest station raw subsequent");
-
-        pt.resetStart();
-        auto nearestByName = tnc.getStation(nearestTide->name().c_str());
+        auto nearestByName = tnc.getStation(nearestTideName.c_str());
         pt.stop("nearest station re-fetched by name");
 
         pt.resetStart();

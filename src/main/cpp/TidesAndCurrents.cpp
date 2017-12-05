@@ -50,7 +50,9 @@ Optional<Station> TidesAndCurrents::getStation(const char *name) {
     }
 }
 
-std::shared_ptr<Station> TidesAndCurrents::findNearestStation(double lat, double lng, StationType type) {
+Optional<Station> TidesAndCurrents::findNearestStation(double lat,
+                                                       double lng,
+                                                       StationType type) {
     auto locationInfo = LocationInfo {};
     auto closest = std::pair<libxtide::StationRef *, double> {nullptr, EARTH_CIRCUMFERENCE_METERS};
 
@@ -62,10 +64,10 @@ std::shared_ptr<Station> TidesAndCurrents::findNearestStation(double lat, double
     });
 
     if (nullptr != closest.first) {
-        return make_shared<Station>(closest.first);
+        return Optional<Station>(Station(closest.first));
+    } else {
+        return Optional<Station>();
     }
-
-    return nullptr;
 }
 
 vector<Station> TidesAndCurrents::findStationIn(double centerLat,
