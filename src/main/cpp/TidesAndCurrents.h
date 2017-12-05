@@ -12,6 +12,7 @@
 #endif
 
 #include "Station.h"
+#include "Optional.h"
 
 namespace mdr {
     class TidesAndCurrents {
@@ -29,7 +30,7 @@ namespace mdr {
 
         std::vector<std::string> stationNames();
 
-        std::shared_ptr<Station> getStation(const char *name);
+        Optional<Station> getStation(const char *name);
 
         std::shared_ptr<Station> findNearestStation(double lat,
                                                     double lng,

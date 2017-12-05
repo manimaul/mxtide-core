@@ -5,31 +5,29 @@
 using namespace mdr;
 using namespace std;
 
-void printStationInformation(const shared_ptr<Station> &station) {
-    if (nullptr != station) {
-        cout << "Station name: " << station->name() << endl;
-        cout << "Station tz: " << station->timeZone() << endl;
-        cout << "Station type: " << station->type().toString() << endl;
-        cout << "Station latitude: " << station->getLatitude() << " longitude: " << station->getLongitude() << endl;
-        cout << "Station timestamp" << station->getTimeStamp() << endl;
+void printStationInformation(Station &station) {
+    cout << "Station name: " << station.name() << endl;
+    cout << "Station tz: " << station.timeZone() << endl;
+    cout << "Station type: " << station.type().toString() << endl;
+    cout << "Station latitude: " << station.getLatitude() << " longitude: " << station.getLongitude() << endl;
+    cout << "Station timestamp" << station.getTimeStamp() << endl;
 
-        auto plainPrediction = station->getPredictionPlain();
-        cout << "Station plain prediction: " << endl;
-        for_each(plainPrediction.begin(), plainPrediction.end(), [] (StationPrediction<string> &data) {
-            cout << data.formatTime() << " ------value-----> " << data.value << endl;
-        });
+    auto plainPrediction = station.getPredictionPlain();
+    cout << "Station plain prediction: " << endl;
+    for_each(plainPrediction.begin(), plainPrediction.end(), [](StationPrediction<string> &data) {
+        cout << data.formatTime() << " ------value-----> " << data.value << endl;
+    });
 
-        auto rawPrediction = station->getPredictionRaw();
-        cout << "Station raw prediction: " << endl;
-        for_each(rawPrediction.begin(), rawPrediction.end(), [] (StationPrediction<float> &data) {
-            cout << data.formatTime() << " ------value-----> " << data.value << endl;
-        });
+    auto rawPrediction = station.getPredictionRaw();
+    cout << "Station raw prediction: " << endl;
+    for_each(rawPrediction.begin(), rawPrediction.end(), [](StationPrediction<float> &data) {
+        cout << data.formatTime() << " ------value-----> " << data.value << endl;
+    });
 
 //        cout << "Station clock prediction SVG: " << station->getPredictionClockSVG() << endl;
-    }
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
     if (argc == 2) {
         auto path = string(argv[1]);
         auto tnc = TidesAndCurrents();
@@ -69,10 +67,20 @@ int main(int argc, char** argv) {
         pt.stop("nearest station re-fetched by name");
 
         pt.resetStart();
-        nearestByName->getPredictionRaw();
-        pt.stop("nearest station re-fetched raw subsequent");
+        nearestByName.let([](Station &station) {
+            station.getPredictionRaw();
+        });
+
+        nearestByName.ifLetElse([&](Station &station) {
+            station.getPredictionRaw();
+            pt.stop("nearest by name station re-fetched raw subsequent");
+        }, [&]() {
+            pt.stop("nearest by name station was empty");
+        });
 
 
+
+//        nearestTide
 //        printStationInformation(nearestTide);
         auto nearestCurrent = tnc.findNearestStation(lat, lng, stationTypeCurrent);
 //        printStationInformation(nearestCurrent);

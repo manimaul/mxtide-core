@@ -16,7 +16,8 @@ set(SOURCE_SET
         src/main/cpp/StationType.h
         src/main/cpp/StationPrediction.h
         src/main/cpp/Location.cpp
-        src/main/cpp/Location.h)
+        src/main/cpp/Location.h
+        src/main/cpp/Optional.h)
 
 set(LINK_LIBS mxtide xtide)
 

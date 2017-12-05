@@ -41,12 +41,13 @@ vector<string> TidesAndCurrents::stationNames() {
  * @param name the station name.
  * @return the station or nullptr if it doesn't exist.
  */
-shared_ptr<Station> TidesAndCurrents::getStation(const char *name) {
+Optional<Station> TidesAndCurrents::getStation(const char *name) {
     libxtide::StationRef *stationRef = stationIndex->getStationRefByName(Dstr(name));
     if (stationRef) {
-        return make_shared<Station>(stationRef);
+        return Optional<Station>(Station(stationRef));
+    } else {
+        return Optional<Station>();
     }
-    return nullptr;
 }
 
 std::shared_ptr<Station> TidesAndCurrents::findNearestStation(double lat, double lng, StationType type) {
