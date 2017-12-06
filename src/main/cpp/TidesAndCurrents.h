@@ -24,18 +24,51 @@ namespace mdr {
     public:
         TidesAndCurrents();
 
+        /**
+         * Add the stations from a harmonics file.
+         *
+         * @param harmonicsFile the absolute path of the file.
+         */
         void addHarmonicsFile(std::string harmonicsFile);
 
+        /**
+         * @return the number of stations.
+         */
         size_t stationCount();
 
+        /**
+         * @return a list of station names.
+         */
         std::vector<std::string> stationNames();
 
-        Optional<Station> getStation(const char *name);
+        /**
+         * Find a station by its exact name.
+         * @param name the exact name of the station.
+         * @return an optional station.
+         */
+        Optional<Station> findStationByName(const char *name);
 
+        /**
+         * Find a station nearest to a position.
+         *
+         * @param lat latitude
+         * @param lng longitude
+         * @param type
+         * @return
+         */
         Optional<Station> findNearestStation(double lat,
                                              double lng,
                                              StationType type);
 
+        /**
+         * Find stations within a circle.
+         *
+         * @param centerLat the center point latitude
+         * @param centerLng the center point longitude
+         * @param radiusMeters the circle radius in meters
+         * @param type the type of stations to find
+         * @return a list of stations within the specified circle.
+         */
         std::vector<Station> findStationIn(double centerLat,
                                            double centerLng,
                                            double radiusMeters,

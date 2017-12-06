@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
         });
 
         pt.resetStart();
-        auto nearestByName = tnc.getStation(nearestTideName.c_str());
+        auto nearestByName = tnc.findStationByName(nearestTideName.c_str());
         pt.stop("nearest station re-fetched by name");
 
         pt.resetStart();
@@ -96,11 +96,11 @@ int main(int argc, char **argv) {
         cout << "names:" << tnc.stationNames().back() << endl;
 
         {
-            auto station = tnc.getStation("San Diego Bay Entrance, California Current");
+            auto station = tnc.findStationByName("San Diego Bay Entrance, California Current");
             printStationInformation(station);
         }
         {
-            auto station = tnc.getStation("station does not exist");
+            auto station = tnc.findStationByName("station does not exist");
             printStationInformation(station);
         }
 

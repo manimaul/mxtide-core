@@ -41,7 +41,7 @@ vector<string> TidesAndCurrents::stationNames() {
  * @param name the station name.
  * @return the station or nullptr if it doesn't exist.
  */
-Optional<Station> TidesAndCurrents::getStation(const char *name) {
+Optional<Station> TidesAndCurrents::findStationByName(const char *name) {
     libxtide::StationRef *stationRef = stationIndex->getStationRefByName(Dstr(name));
     if (stationRef) {
         return Optional<Station>(Station(stationRef));
