@@ -96,8 +96,6 @@
 // Unfortunately, some warnings just need to be quashed permanently.
 // Due to coding standard making return values const:
 #pragma GCC diagnostic ignored "-Wignored-qualifiers"
-// Due to deprecation of auto_ptr:
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 #else
 #define quashWarning(w)

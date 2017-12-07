@@ -34,7 +34,7 @@ static void doLocation (const Dstr &name,
                         Format::Format form) {
   const StationRef *sr (Global::stationIndex().getStationRefByName(name));
   if (sr) {
-    std::auto_ptr<Station> station (sr->load());
+    std::unique_ptr<Station> station (sr->load());
     station->step = step;
 
     // Install mark level, if applicable.
