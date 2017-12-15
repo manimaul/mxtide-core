@@ -26,8 +26,12 @@ set(LINK_LIBS mxtide xtide)
 if (ANDROID)
     find_library(log-lib log)
     set(SOURCE_SET ${SOURCE_SET}
-            src/main/cpp/AndXTideLib.cpp
-            src/main/cpp/AndXTideLib.hh
+            src/main/cpp/Jni.cpp
+            src/main/cpp/Jni.h
+            src/main/cpp/JniStation.cpp
+            src/main/cpp/JniStation.h
+            src/main/cpp/JniTidesAndCurrents.cpp
+            src/main/cpp/JniTidesAndCurrents.h
             )
     set(LINK_LIBS ${LINK_LIBS} ${log-lib})
     add_library(mxtide SHARED ${SOURCE_SET})
