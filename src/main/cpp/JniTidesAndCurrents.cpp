@@ -1,5 +1,9 @@
 #include <jni.h>
+#include <codecvt>
+#include <locale>
 #include "TidesAndCurrents.h"
+#include "JniArrayList.h"
+#include "JniString.h"
 
 extern "C" {
 
@@ -33,6 +37,22 @@ Java_com_mxmariner_mxtide_internal_TidesAndCurrents_stationCount(JNIEnv *env,
                                                                  jlong ptr) {
     mdr::TidesAndCurrents *tidesAndCurrents = reinterpret_cast<mdr::TidesAndCurrents *>(ptr);
     return static_cast<jint>(tidesAndCurrents->stationCount());
+}
+
+JNIEXPORT jobject JNICALL
+Java_com_mxmariner_mxtide_internal_TidesAndCurrents_stationNames(JNIEnv *env,
+                                                                 jclass type,
+                                                                 jlong ptr) {
+    mdr::TidesAndCurrents *tidesAndCurrents = reinterpret_cast<mdr::TidesAndCurrents *>(ptr);
+    auto names = tidesAndCurrents->stationNames();
+    auto count = names.size();
+    auto arrayList = mdr::JniArrayList(env, count);
+    for (int i = 0; i < count; ++i) {
+        auto javaName = mdr::JniString::toJni(env, names[i]);
+        arrayList.add(env, javaName);
+        env->DeleteLocalRef(javaName);
+    }
+    return arrayList.getArrayList();
 }
 
 }

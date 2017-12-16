@@ -95,14 +95,19 @@ int main(int argc, char **argv) {
         cout << "station count:" << tnc.stationCount() << endl;
         cout << "names:" << tnc.stationNames().back() << endl;
 
-        {
-            auto station = tnc.findStationByName("San Diego Bay Entrance, California Current");
-            printStationInformation(station);
-        }
-        {
-            auto station = tnc.findStationByName("station does not exist");
-            printStationInformation(station);
-        }
+        auto names = tnc.stationNames();
+        for_each(names.begin(), names.end(), [](string &name) {
+            cout << "names" << name << endl;
+        });
+
+//        {
+//            auto station = tnc.findStationByName("San Diego Bay Entrance, California Current");
+//            printStationInformation(station);
+//        }
+//        {
+//            auto station = tnc.findStationByName("station does not exist");
+//            printStationInformation(station);
+//        }
 
         exit(EXIT_SUCCESS);
     } else {

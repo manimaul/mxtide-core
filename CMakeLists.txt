@@ -28,8 +28,12 @@ if (ANDROID)
     set(SOURCE_SET ${SOURCE_SET}
             src/main/cpp/Jni.cpp
             src/main/cpp/Jni.h
+            src/main/cpp/JniArrayList.cpp
+            src/main/cpp/JniArrayList.h
             src/main/cpp/JniStation.cpp
             src/main/cpp/JniStation.h
+            src/main/cpp/JniString.h
+            src/main/cpp/JniString.cpp
             src/main/cpp/JniTidesAndCurrents.cpp
             src/main/cpp/JniTidesAndCurrents.h
             )
