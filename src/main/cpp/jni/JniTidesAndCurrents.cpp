@@ -1,9 +1,9 @@
 #include <jni.h>
 #include <codecvt>
 #include <locale>
-#include "TidesAndCurrents.h"
 #include "JniArrayList.h"
 #include "JniString.h"
+#include "../TidesAndCurrents.h"
 
 extern "C" {
 

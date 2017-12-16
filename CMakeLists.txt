@@ -19,23 +19,24 @@ set(SOURCE_SET
         src/main/cpp/StationPrediction.h
         src/main/cpp/Location.cpp
         src/main/cpp/Location.h
-        src/main/cpp/Optional.h)
+        src/main/cpp/Optional.h
+        )
 
 set(LINK_LIBS mxtide xtide)
 
 if (ANDROID)
     find_library(log-lib log)
     set(SOURCE_SET ${SOURCE_SET}
-            src/main/cpp/Jni.cpp
-            src/main/cpp/Jni.h
-            src/main/cpp/JniArrayList.cpp
-            src/main/cpp/JniArrayList.h
-            src/main/cpp/JniStation.cpp
-            src/main/cpp/JniStation.h
-            src/main/cpp/JniString.h
-            src/main/cpp/JniString.cpp
-            src/main/cpp/JniTidesAndCurrents.cpp
-            src/main/cpp/JniTidesAndCurrents.h
+            src/main/cpp/jni/Jni.cpp
+            src/main/cpp/jni/Jni.h
+            src/main/cpp/jni/JniArrayList.cpp
+            src/main/cpp/jni/JniArrayList.h
+            src/main/cpp/jni/JniStation.cpp
+            src/main/cpp/jni/JniStation.h
+            src/main/cpp/jni/JniString.h
+            src/main/cpp/jni/JniString.cpp
+            src/main/cpp/jni/JniTidesAndCurrents.cpp
+            src/main/cpp/jni/JniTidesAndCurrents.h
             )
     set(LINK_LIBS ${LINK_LIBS} ${log-lib})
     add_library(mxtide SHARED ${SOURCE_SET})
