@@ -1,5 +1,6 @@
 #include <chrono>
 #include <sstream>
+#include <algorithm>
 #include "Station.h"
 
 using namespace std;
@@ -36,7 +37,9 @@ DurationSeconds Station::twentyFourHours() {
 }
 
 const string Station::timeZone() {
-    return string(stationRef->timezone.aschar());
+    auto tz = string(stationRef->timezone.aschar());
+    tz.erase(std::remove(tz.begin(), tz.end(), ':'), tz.end());
+    return tz;
 }
 
 const string Station::name() {
@@ -119,7 +122,7 @@ string Station::getPredictionClockSVG(TimePoint epoch, DurationSeconds duration,
     auto start = libxtide::Timestamp(SystemClock::to_time_t(epoch));
     auto end = libxtide::Timestamp(SystemClock::to_time_t(epoch + duration));
     Dstr dstr = {};
-    getStation()->print(dstr, start, end, libxtide::Mode::graph, libxtide::Format::SVG);
+    getStation()->print(dstr, start, end, libxtide::Mode::clock, libxtide::Format::SVG);
     return dstr.aschar();
 }
 
