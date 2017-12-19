@@ -25,10 +25,10 @@ Java_com_mxmariner_mxtide_internal_TidesAndCurrents_addHarmonicsFile(JNIEnv *env
                                                                      jclass type,
                                                                      jlong ptr,
                                                                      jstring pPath) {
-    const char *path = (*env).GetStringUTFChars(pPath, NULL);
+    const char *path = env->GetStringUTFChars(pPath, NULL);
     mdr::TidesAndCurrents *tidesAndCurrents = reinterpret_cast<mdr::TidesAndCurrents *>(ptr);
     tidesAndCurrents->addHarmonicsFile(path);
-    (*env).ReleaseStringUTFChars(pPath, path);
+    env->ReleaseStringUTFChars(pPath, path);
 }
 
 JNIEXPORT jint JNICALL
@@ -53,6 +53,23 @@ Java_com_mxmariner_mxtide_internal_TidesAndCurrents_stationNames(JNIEnv *env,
         env->DeleteLocalRef(javaName);
     }
     return arrayList.getArrayList();
+}
+
+JNIEXPORT jlong JNICALL
+Java_com_mxmariner_mxtide_internal_TidesAndCurrents_findStationByName(JNIEnv *env,
+                                                                      jclass type,
+                                                                      jlong ptr,
+                                                                      jstring name) {
+    const char *stationName = env->GetStringUTFChars(name, NULL);
+    mdr::TidesAndCurrents *tidesAndCurrents = reinterpret_cast<mdr::TidesAndCurrents *>(ptr);
+    auto station = tidesAndCurrents->findStationByName(stationName);
+    jlong retVal = 0;
+    station.let([&retVal](mdr::Station &stn) {
+        mdr::Station *s = new mdr::Station(stn);
+        retVal = reinterpret_cast<jlong>(s);
+    });
+    env->ReleaseStringUTFChars(name, stationName);
+    return retVal;
 }
 
 }
