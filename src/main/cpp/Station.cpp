@@ -43,7 +43,8 @@ const string Station::timeZone() {
 }
 
 const string Station::name() {
-    return string(stationRef->name.aschar());
+    auto name = stationRef->name;
+    return string(name.utf8().aschar());
 }
 
 string Station::getTimeStamp(TimePoint epoch)  {

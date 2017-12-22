@@ -30,7 +30,8 @@ size_t TidesAndCurrents::stationCount() {
 vector<string> TidesAndCurrents::stationNames() {
     auto names = vector<string>(stationIndex->size());
     transform(stationIndex->begin(), stationIndex->end(), names.begin(), [](libxtide::StationRef *each) -> string {
-        return string(each->name.aschar());
+        auto name = each->name;
+        return string(name.utf8().aschar());
     });
     return names;
 }
