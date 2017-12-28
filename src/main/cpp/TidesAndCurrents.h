@@ -1,5 +1,4 @@
-#ifndef PROJECT_LIBXTIDE_H
-#define PROJECT_LIBXTIDE_H
+#pragma once
 
 #include <string>
 #include "MeasureUnit.h"
@@ -92,5 +91,3 @@ namespace mdr {
 
     };
 }
-
-#endif //PROJECT_LIBXTIDE_H

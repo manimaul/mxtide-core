@@ -1,5 +1,4 @@
-#ifndef PROJECT_STATION_H
-#define PROJECT_STATION_H
+#pragma once
 
 #include <string>
 
@@ -103,5 +102,3 @@ namespace mdr {
         StationType type();
     };
 }
-
-#endif //PROJECT_STATION_H

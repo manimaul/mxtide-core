@@ -1,5 +1,4 @@
-#ifndef PROJECT_UNIT_H
-#define PROJECT_UNIT_H
+#pragma once
 
 namespace mdr {
     enum MeasureUnit {
@@ -15,5 +14,3 @@ namespace mdr {
         }
     }
 }
-
-#endif //PROJECT_UNIT_H

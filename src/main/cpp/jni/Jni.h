@@ -1,5 +1,4 @@
-#ifndef PROJECT_JNI_H
-#define PROJECT_JNI_H
+#pragma once
 
 #include <jni.h>
 #include "JniTidesAndCurrents.h"
@@ -22,5 +21,3 @@ namespace mdr {
         static void checkException(JNIEnv *env, bool terminal = true);
     };
 }
-
-#endif //PROJECT_JNI_H

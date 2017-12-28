@@ -1,5 +1,4 @@
-#ifndef PROJECT_JSTATION_H
-#define PROJECT_JSTATION_H
+#pragma once
 
 namespace mdr {
 
@@ -7,5 +6,3 @@ namespace mdr {
 
     };
 }
-
-#endif //PROJECT_JSTATION_H

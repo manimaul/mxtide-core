@@ -1,5 +1,4 @@
-#ifndef PROJECT_PERFTIMER_H
-#define PROJECT_PERFTIMER_H
+#pragma once
 
 #include <chrono>
 #include <iostream>
@@ -27,5 +26,3 @@ namespace mdr {
         }
     };
 }
-
-#endif //PROJECT_PERFTIMER_H

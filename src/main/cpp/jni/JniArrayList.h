@@ -1,6 +1,4 @@
-#ifndef MXTIDE_ANDROID_JNIARRAYLIST_H
-#define MXTIDE_ANDROID_JNIARRAYLIST_H
-
+#pragma once
 
 #include <jni.h>
 
@@ -24,6 +22,3 @@ namespace mdr {
         static void registerNative(JNIEnv *env);
     };
 }
-
-
-#endif //MXTIDE_ANDROID_JNIARRAYLIST_H

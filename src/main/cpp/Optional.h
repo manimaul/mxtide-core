@@ -1,5 +1,4 @@
-#ifndef PROJECT_OPTIONAL_H
-#define PROJECT_OPTIONAL_H
+#pragma once
 
 #include <functional>
 
@@ -33,5 +32,3 @@ namespace mdr {
     };
 
 }
-
-#endif //PROJECT_OPTIONAL_H

@@ -1,5 +1,4 @@
-#ifndef PROJECT_LOCATION_H
-#define PROJECT_LOCATION_H
+#pragma once
 
 struct LocationInfo {
     double distanceMeters;
@@ -22,6 +21,3 @@ public:
                                       double endLng);
 
 };
-
-
-#endif //PROJECT_LOCATION_H

@@ -1,5 +1,4 @@
-#ifndef PROJECT_STATIONTYPE_H
-#define PROJECT_STATIONTYPE_H
+#pragma once
 
 #include <string>
 
@@ -25,6 +24,3 @@ namespace mdr {
     static const StationType stationTypeTide = StationType { StationType::Type::tide };
     static const StationType stationTypeCurrent = StationType { StationType::Type::current };
 }
-
-
-#endif //PROJECT_STATIONTYPE_H

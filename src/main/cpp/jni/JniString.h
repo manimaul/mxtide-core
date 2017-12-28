@@ -1,5 +1,4 @@
-#ifndef MXTIDE_ANDROID_JNISTRING_H
-#define MXTIDE_ANDROID_JNISTRING_H
+#pragma once
 
 #include <string>
 #include <jni.h>
@@ -16,6 +15,3 @@ namespace mdr {
 
     };
 }
-
-
-#endif //MXTIDE_ANDROID_JNISTRING_H

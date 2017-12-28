@@ -1,5 +1,4 @@
-#ifndef PROJECT_STATIONPREDICTION_H
-#define PROJECT_STATIONPREDICTION_H
+#pragma once
 
 #include <string>
 #include <chrono>
@@ -26,5 +25,3 @@ namespace mdr {
         }
     };
 }
-
-#endif //PROJECT_STATIONPREDICTION_H
