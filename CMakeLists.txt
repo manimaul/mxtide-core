@@ -37,6 +37,8 @@ if (ANDROID)
             src/main/cpp/jni/JniString.cpp
             src/main/cpp/jni/JniTidesAndCurrents.cpp
             src/main/cpp/jni/JniTidesAndCurrents.h
+            src/main/cpp/jni/JniStationPrediction.h
+            src/main/cpp/jni/JniStationPrediction.cpp
             )
     set(LINK_LIBS ${LINK_LIBS} ${log-lib})
     add_library(mxtide SHARED ${SOURCE_SET})

@@ -2,6 +2,7 @@
 #include "Jni.h"
 #include "JniArrayList.h"
 #include "JniString.h"
+#include "JniStationPrediction.h"
 
 void mdr::Jni::checkException(JNIEnv *env, bool terminal) {
     if (env->ExceptionCheck()) {
@@ -32,6 +33,7 @@ JNI_OnLoad(JavaVM *vm, void *reserved) {
     vm->GetEnv((void **) &env, JNI_VERSION_1_6);
     mdr::JniArrayList::registerNative(env);
     mdr::JniString::registerNative(env);
+    mdr::JniStationPrediction::registerNative(env);
     return JNI_VERSION_1_6;
 }
 
