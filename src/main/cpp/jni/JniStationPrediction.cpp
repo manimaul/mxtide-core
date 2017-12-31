@@ -1,6 +1,7 @@
 #include "JniStationPrediction.h"
 #include "JniString.h"
 #include "Jni.h"
+#include "JniFloat.h"
 
 jclass mdr::JniStationPrediction::stationPredictionFactoryClass = nullptr;
 jmethodID mdr::JniStationPrediction::factoryCtor = nullptr;
@@ -22,7 +23,7 @@ jobject mdr::JniStationPrediction::createJniStationPrediction(JNIEnv *env,
     auto duration = timePoint.time_since_epoch();
     auto epoch = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
     jlong jniEpoch = static_cast<jlong>(epoch);
-    jfloat jniValue = static_cast<jfloat>(value);
+    jobject jniValue = mdr::JniFloat::toJni(env, value);
     jstring tz = mdr::JniString::toJni(env, timeZone);
     auto retVal = env->CallStaticObjectMethod(stationPredictionFactoryClass, factoryCtor, jniEpoch,
                                               tz, jniValue);

@@ -31,6 +31,8 @@ if (ANDROID)
             src/main/cpp/jni/Jni.h
             src/main/cpp/jni/JniArrayList.cpp
             src/main/cpp/jni/JniArrayList.h
+            src/main/cpp/jni/JniFloat.cpp
+            src/main/cpp/jni/JniFloat.h
             src/main/cpp/jni/JniStation.cpp
             src/main/cpp/jni/JniStation.h
             src/main/cpp/jni/JniString.h
