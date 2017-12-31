@@ -42,6 +42,15 @@ Java_com_mxmariner_mxtide_internal_Station_name(JNIEnv *env,
     return mdr::JniString::toJni(env, name);
 }
 
+JNIEXPORT jstring JNICALL
+Java_com_mxmariner_mxtide_internal_Station_type(JNIEnv *env,
+                                                jclass obj,
+                                                jlong ptr) {
+    mdr::Station *station = reinterpret_cast<mdr::Station *>(ptr);
+    auto value = station->type().toString();
+    return mdr::JniString::toJni(env, value);
+}
+
 JNIEXPORT jobject JNICALL
 Java_com_mxmariner_mxtide_internal_Station_getPredictionRaw(JNIEnv *env,
                                                             jclass obj,
