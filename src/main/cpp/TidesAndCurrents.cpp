@@ -1,6 +1,7 @@
 #include <iostream>
 #include "TidesAndCurrents.h"
 #include "Location.h"
+#include "StationTypeUtil.h"
 
 #define EARTH_CIRCUMFERENCE_METERS 40.75e6
 
@@ -59,7 +60,7 @@ Optional<Station> TidesAndCurrents::findNearestStation(double lat,
 
     for_each(stationIndex->begin(), stationIndex->end(), [&](libxtide::StationRef *ref) {
         Location::calculateLocationInfo(locationInfo, lat, lng, ref->coordinates.lat(), ref->coordinates.lng());
-        if (type.equals(ref) && locationInfo.distanceMeters < closest.second) {
+        if (stationTypeEquals(type, ref) && locationInfo.distanceMeters < closest.second) {
             closest = {ref, locationInfo.distanceMeters};
         }
     });
@@ -81,7 +82,7 @@ vector<Station> TidesAndCurrents::findStationIn(double centerLat,
     copy_if(stationIndex->begin(), stationIndex->end(), back_inserter(stationRefs), [&](libxtide::StationRef *ref) {
         Location::calculateLocationInfo(locationInfo, centerLat, centerLng, ref->coordinates.lat(),
                                         ref->coordinates.lng());
-        return type.equals(ref) && locationInfo.distanceMeters <= radiusMeters;
+        return stationTypeEquals(type, ref) && locationInfo.distanceMeters <= radiusMeters;
     });
 
     vector<Station> results;
@@ -102,7 +103,7 @@ TidesAndCurrents::findStationInBounds(double northLat,
     copy_if(stationIndex->begin(), stationIndex->end(), back_inserter(stationRefs), [&](libxtide::StationRef *ref) {
         double lat = ref->coordinates.lat();
         double lng = ref->coordinates.lng();
-        return type.equals(ref) && lat >= southLat && lat <= northLat && lng >= westLng && lng <= eastLng;
+        return stationTypeEquals(type, ref) && lat >= southLat && lat <= northLat && lng >= westLng && lng <= eastLng;
     });
     vector<Station> results;
     transform(stationRefs.begin(), stationRefs.end(), back_inserter(results), [](libxtide::StationRef *ref) -> Station {
