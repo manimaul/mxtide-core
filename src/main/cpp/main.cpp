@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
         pt.stop("adding harmonics");
 
         pt.resetStart();
-        auto waStations = tnc.findStationInBounds(49, -117, 45.4, -125, stationTypeTide);
+        auto waStations = tnc.findStationsInBounds(49, -117, 45.4, -125, stationTypeTide);
         pt.stop("finding WA region stations");
         cout << "WA region stations found: " << waStations.size() << endl;
         for_each(waStations.begin(), waStations.end(), [](Station &station) {
@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
         double lng = -122;
         double radius = 100000;
         pt.resetStart();
-        auto stations = tnc.findStationIn(lat, lng, radius, stationTypeTide);
+        auto stations = tnc.findStationsInCircle(lat, lng, radius, stationTypeTide);
         pt.stop("finding stations with radius");
 
         pt.resetStart();

@@ -72,10 +72,10 @@ Optional<Station> TidesAndCurrents::findNearestStation(double lat,
     }
 }
 
-vector<Station> TidesAndCurrents::findStationIn(double centerLat,
-                                                double centerLng,
-                                                double radiusMeters,
-                                                StationType type) {
+vector<Station> TidesAndCurrents::findStationsInCircle(double centerLat,
+                                                       double centerLng,
+                                                       double radiusMeters,
+                                                       StationType type) {
     auto locationInfo = LocationInfo {};
 
     vector<libxtide::StationRef *> stationRefs;
@@ -94,11 +94,11 @@ vector<Station> TidesAndCurrents::findStationIn(double centerLat,
 }
 
 vector<Station>
-TidesAndCurrents::findStationInBounds(double northLat,
-                                      double eastLng,
-                                      double southLat,
-                                      double westLng,
-                                      StationType type) {
+TidesAndCurrents::findStationsInBounds(double northLat,
+                                       double eastLng,
+                                       double southLat,
+                                       double westLng,
+                                       StationType type) {
     vector<libxtide::StationRef *> stationRefs;
     copy_if(stationIndex->begin(), stationIndex->end(), back_inserter(stationRefs), [&](libxtide::StationRef *ref) {
         double lat = ref->coordinates.lat();

@@ -53,7 +53,7 @@ namespace mdr {
          * @param lat latitude
          * @param lng longitude
          * @param type
-         * @return
+         * @return an optional nearest station.
          */
         Optional<Station> findNearestStation(double lat,
                                              double lng,
@@ -68,10 +68,10 @@ namespace mdr {
          * @param type the type of stations to find
          * @return a list of stations within the specified circle.
          */
-        std::vector<Station> findStationIn(double centerLat,
-                                           double centerLng,
-                                           double radiusMeters,
-                                           StationType type);
+        std::vector<Station> findStationsInCircle(double centerLat,
+                                                  double centerLng,
+                                                  double radiusMeters,
+                                                  StationType type);
 
         /**
          * Find stations within a bounding box. Note: the bounding box cannot span the international dateline.
@@ -83,11 +83,11 @@ namespace mdr {
          * @param type the station type
          * @return a list of stations within the specified bounds.
          */
-        std::vector<Station> findStationInBounds(double northLat,
-                                                 double eastLng,
-                                                 double southLat,
-                                                 double westLng,
-                                                 StationType type);
+        std::vector<Station> findStationsInBounds(double northLat,
+                                                  double eastLng,
+                                                  double southLat,
+                                                  double westLng,
+                                                  StationType type);
 
     };
 }
