@@ -72,6 +72,29 @@ Optional<Station> TidesAndCurrents::findNearestStation(double lat,
     }
 }
 
+std::vector<Station> TidesAndCurrents::findNearestStations(double lat, double lng, StationType type) {
+    vector<libxtide::StationRef *> stationRefs;
+    copy_if(stationIndex->begin(), stationIndex->end(), back_inserter(stationRefs), [&](libxtide::StationRef *ref) {
+        return stationTypeEquals(type, ref);
+    });
+
+    auto lhsInfo = LocationInfo {};
+    auto rhsInfo = LocationInfo {};
+    std::sort(stationRefs.begin(), stationRefs.end(),
+              [&lhsInfo, &rhsInfo, &lat, &lng](libxtide::StationRef *lhs, libxtide::StationRef *rhs) {
+                  Location::calculateLocationInfo(lhsInfo, lat, lng, lhs->coordinates.lat(), lhs->coordinates.lng());
+                  Location::calculateLocationInfo(rhsInfo, lat, lng, rhs->coordinates.lat(), rhs->coordinates.lng());
+                  return lhsInfo.distanceMeters < rhsInfo.distanceMeters;
+              });
+
+    vector<Station> results;
+    transform(stationRefs.begin(), stationRefs.end(), back_inserter(results), [](libxtide::StationRef *ref) -> Station {
+        return Station(ref);
+    });
+
+    return results;
+}
+
 vector<Station> TidesAndCurrents::findStationsInCircle(double centerLat,
                                                        double centerLng,
                                                        double radiusMeters,
@@ -93,12 +116,11 @@ vector<Station> TidesAndCurrents::findStationsInCircle(double centerLat,
     return results;
 }
 
-vector<Station>
-TidesAndCurrents::findStationsInBounds(double northLat,
-                                       double eastLng,
-                                       double southLat,
-                                       double westLng,
-                                       StationType type) {
+vector<Station> TidesAndCurrents::findStationsInBounds(double northLat,
+                                                       double eastLng,
+                                                       double southLat,
+                                                       double westLng,
+                                                       StationType type) {
     vector<libxtide::StationRef *> stationRefs;
     copy_if(stationIndex->begin(), stationIndex->end(), back_inserter(stationRefs), [&](libxtide::StationRef *ref) {
         double lat = ref->coordinates.lat();

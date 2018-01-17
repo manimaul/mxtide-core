@@ -36,11 +36,8 @@ int main(int argc, char **argv) {
         tnc.addHarmonicsFile(path);
         pt.stop("adding harmonics");
 
-        pt.resetStart();
-        auto waStations = tnc.findStationsInBounds(49, -117, 45.4, -125, stationTypeTide);
-        pt.stop("finding WA region stations");
-        cout << "WA region stations found: " << waStations.size() << endl;
-        for_each(waStations.begin(), waStations.end(), [](Station &station) {
+        auto sorted = tnc.findNearestStations(49, -117, stationTypeTide);
+        for_each(sorted.begin(), sorted.begin() + 10, [](Station &station) {
            cout << "station name: " << station.name() << endl;
         });
 

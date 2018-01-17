@@ -59,6 +59,17 @@ namespace mdr {
                                              double lng,
                                              StationType type);
 
+       /**
+        * Find the nearest stations sorted by distance
+        *
+        * @param lat your latitude
+        * @param lng your longitude
+        * @param type the type of the stations to find
+        * @return the list of closest stations sorted by distance to the provided position
+        */
+        std::vector<Station> findNearestStations(double lat,
+                                                 double lng,
+                                                 StationType type);
         /**
          * Find stations within a circle.
          *
