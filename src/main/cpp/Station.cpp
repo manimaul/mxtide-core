@@ -19,6 +19,24 @@ vector<string> split(const char* str, char delimiter) {
     return tokens;
 }
 
+void Station::setStationUnits(MeasureUnit &unit) {
+    switch (unit) {
+        case metric:
+            getStation()->setUnits(libxtide::Units::meters);
+            break;
+        case statute:
+            getStation()->setUnits(libxtide::Units::feet);
+            break;
+        case nautical:
+            if (getStation()->isCurrent) {
+                getStation()->setUnits(libxtide::Units::knots);
+            } else {
+                getStation()->setUnits(libxtide::Units::feet);
+            }
+            break;
+    }
+}
+
 const double Station::getLatitude() {
     return stationRef->coordinates.lat();
 }
@@ -55,12 +73,7 @@ string Station::getTimeStamp(TimePoint epoch)  {
 }
 
 vector<StationPrediction<float>> Station::getPredictionRaw(TimePoint epoch, DurationSeconds duration, MeasureUnit unit) {
-    switch (unit) {
-        case meters:
-            getStation()->setUnits(libxtide::Units::meters);
-        case feet:
-            getStation()->setUnits(libxtide::Units::feet);
-    }
+    setStationUnits(unit);
     auto start = libxtide::Timestamp(SystemClock::to_time_t(epoch));
     auto end = libxtide::Timestamp(SystemClock::to_time_t(epoch + duration));
     Dstr dstr = {};
@@ -80,12 +93,7 @@ vector<StationPrediction<float>> Station::getPredictionRaw(TimePoint epoch, Dura
 }
 
 vector<StationPrediction<string>> Station::getPredictionPlain(TimePoint epoch, DurationSeconds duration, MeasureUnit unit) {
-    switch (unit) {
-        case meters:
-            getStation()->setUnits(libxtide::Units::meters);
-        case feet:
-            getStation()->setUnits(libxtide::Units::feet);
-    }
+    setStationUnits(unit);
     auto start = libxtide::Timestamp(SystemClock::to_time_t(epoch));
     auto end = libxtide::Timestamp(SystemClock::to_time_t(epoch + duration));
     Dstr dstr = {};
@@ -114,12 +122,7 @@ StationType Station::type() {
 }
 
 string Station::getPredictionClockSVG(TimePoint epoch, DurationSeconds duration, MeasureUnit unit) {
-    switch (unit) {
-        case meters:
-            getStation()->setUnits(libxtide::Units::meters);
-        case feet:
-            getStation()->setUnits(libxtide::Units::feet);
-    }
+    setStationUnits(unit);
     auto start = libxtide::Timestamp(SystemClock::to_time_t(epoch));
     auto end = libxtide::Timestamp(SystemClock::to_time_t(epoch + duration));
     Dstr dstr = {};

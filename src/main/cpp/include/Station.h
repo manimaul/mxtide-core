@@ -22,6 +22,7 @@ namespace mdr {
         libxtide::StationRef* stationRef = nullptr;
         libxtide::Station* station = nullptr;
         libxtide::Station* getStation();
+        void setStationUnits(MeasureUnit &unit);
 
     public:
         Station() = default;
@@ -70,7 +71,7 @@ namespace mdr {
          */
         std::vector<StationPrediction<float>> getPredictionRaw(TimePoint epoch = now(),
                                                                DurationSeconds duration = twentyFourHours(),
-                                                               MeasureUnit unit = meters);
+                                                               MeasureUnit unit = metric);
 
         /**
          * Get a tidal prediction for a window of time containing a string value representing the tide or current level in
@@ -83,7 +84,7 @@ namespace mdr {
          */
         std::vector<StationPrediction<std::string>> getPredictionPlain(TimePoint epoch = now(),
                                                                DurationSeconds duration = twentyFourHours(),
-                                                               MeasureUnit unit = meters);
+                                                               MeasureUnit unit = metric);
 
         /**
          * Get an SVG displaying a small ("clock") graph of the tide or current level.
@@ -94,7 +95,7 @@ namespace mdr {
          */
         std::string getPredictionClockSVG(TimePoint epoch = now(),
                                           DurationSeconds duration = twentyFourHours(),
-                                          MeasureUnit unit = meters);
+                                          MeasureUnit unit = metric);
 
         /**
          * @return the type of station.

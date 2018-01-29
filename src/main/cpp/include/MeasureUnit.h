@@ -2,15 +2,8 @@
 
 namespace mdr {
     enum MeasureUnit {
-        meters,
-        feet
+        metric,
+        statute,
+        nautical
     };
-
-    static MeasureUnit MeasureUnitFromString(std::string &str) {
-        if (str == "feet") {
-            return MeasureUnit::feet;
-        } else {
-            return MeasureUnit::meters;
-        }
-    }
 }
