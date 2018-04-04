@@ -1,6 +1,7 @@
 #include <chrono>
 #include <sstream>
 #include <algorithm>
+#include <stdexcept>
 #include "Station.h"
 
 using namespace std;
@@ -9,7 +10,7 @@ using namespace std::chrono;
 
 Station::Station(libxtide::StationRef *stationRef) : stationRef(stationRef) {}
 
-vector<string> split(const char* str, char delimiter) {
+vector<string> split(const char *str, char delimiter) {
     auto tokens = vector<string>();
     string token;
     istringstream tokenStream(str);
@@ -65,15 +66,48 @@ const string Station::name() {
     return string(name.utf8().aschar());
 }
 
-string Station::getTimeStamp(TimePoint epoch)  {
+string Station::getTimeStamp(TimePoint epoch) {
     auto t = libxtide::Timestamp(SystemClock::to_time_t(epoch));
     auto s = Dstr{};
     t.print(s, stationRef->timezone);
     return s.aschar();
 }
 
-vector<StationPrediction<float>> Station::getPredictionRaw(TimePoint epoch, DurationSeconds duration, MeasureUnit unit) {
-    setStationUnits(unit);
+
+float Station::currentStationValue(float value, libxtide::Units::PredictionUnits &srcUnit, MeasureUnit &dstUnit) {
+    if (srcUnit == dstUnit) {
+        return value;
+    }
+    float kts = value;
+    if (srcUnit == libxtide::Units::PredictionUnits::knotsSquared) {
+        // This is not mathematically correct, but it is tidematically correct.
+        if (value < 0) {
+            kts = -sqrt(fabs(kts));
+        } else {
+            kts = sqrt(kts);
+        }
+    } else if (srcUnit != libxtide::Units::PredictionUnits::knots) {
+        throw std::runtime_error { "unexpected tide station units" };
+    }
+
+    switch (dstUnit) {
+        case metric:
+            return kts * 1.852f; // kph
+        case statute:
+            return kts * 1.15078f; //mph
+        default:
+        case nautical:
+            return kts;
+    }
+}
+
+vector<StationPrediction<float>>
+Station::getPredictionRaw(TimePoint epoch, DurationSeconds duration, MeasureUnit unit) {
+    bool isCurrent = getStation()->isCurrent;
+    if (!isCurrent) {
+        setStationUnits(unit); // only sets length units
+    }
+    auto srcUnit = getStation()->predictUnits();
     auto start = libxtide::Timestamp(SystemClock::to_time_t(epoch));
     auto end = libxtide::Timestamp(SystemClock::to_time_t(epoch + duration));
     Dstr dstr = {};
@@ -82,34 +116,17 @@ vector<StationPrediction<float>> Station::getPredictionRaw(TimePoint epoch, Dura
     auto lines = split(dstr.aschar(), '\n');
 
     vector<StationPrediction<float>> predictionData;
-    transform(lines.begin(), lines.end(), back_inserter(predictionData), [](string &str) -> StationPrediction<float> {
-        auto pair = split(str.c_str(), ' ');
-        assert(pair.size() == 2);
-        auto value = stof(pair.back());
-        auto timePoint = TimePoint(seconds(stoll(pair.front())));
-        return StationPrediction<float> { timePoint, value };
-    });
-    return predictionData;
-}
-
-vector<StationPrediction<string>> Station::getPredictionPlain(TimePoint epoch, DurationSeconds duration, MeasureUnit unit) {
-    setStationUnits(unit);
-    auto start = libxtide::Timestamp(SystemClock::to_time_t(epoch));
-    auto end = libxtide::Timestamp(SystemClock::to_time_t(epoch + duration));
-    Dstr dstr = {};
-
-    getStation()->print(dstr, start, end, libxtide::Mode::plain, libxtide::Format::CSV);
-    auto lines = split(dstr.aschar(), '\n');
-    vector<StationPrediction<string>> predictionData;
-    transform(lines.begin(), lines.end(), back_inserter(predictionData), [](string &str) -> StationPrediction<string> {
-        auto tuple = split(str.c_str(), ',');
-        auto dateString = tuple[1] + " " +  tuple[2];
-        std::tm tm = {};
-        strptime(dateString.c_str(), dateTimeFormat, &tm);
-        auto timePoint = time_point_cast<seconds>(system_clock::from_time_t(std::mktime(&tm)));
-        return StationPrediction<string> { timePoint, tuple.back() };
-
-    });
+    transform(lines.begin(), lines.end(), back_inserter(predictionData),
+              [&isCurrent, &srcUnit, &unit](string &str) -> StationPrediction<float> {
+                  auto pair = split(str.c_str(), ' ');
+                  assert(pair.size() == 2);
+                  float value = stof(pair.back());
+                  if (isCurrent) {
+                      value = currentStationValue(value, srcUnit, unit);
+                  }
+                  auto timePoint = TimePoint(seconds(stoll(pair.front())));
+                  return StationPrediction<float>{timePoint, value};
+              });
     return predictionData;
 }
 
@@ -119,15 +136,6 @@ StationType Station::type() {
     } else {
         return stationTypeTide;
     }
-}
-
-string Station::getPredictionClockSVG(TimePoint epoch, DurationSeconds duration, MeasureUnit unit) {
-    setStationUnits(unit);
-    auto start = libxtide::Timestamp(SystemClock::to_time_t(epoch));
-    auto end = libxtide::Timestamp(SystemClock::to_time_t(epoch + duration));
-    Dstr dstr = {};
-    getStation()->print(dstr, start, end, libxtide::Mode::clock, libxtide::Format::SVG);
-    return dstr.aschar();
 }
 
 libxtide::Station *Station::getStation() {

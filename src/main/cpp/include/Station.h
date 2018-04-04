@@ -19,16 +19,24 @@ namespace mdr {
     class Station {
 
     private:
-        libxtide::StationRef* stationRef = nullptr;
-        libxtide::Station* station = nullptr;
-        libxtide::Station* getStation();
+        libxtide::StationRef *stationRef = nullptr;
+        libxtide::Station *station = nullptr;
+
+        libxtide::Station *getStation();
+
         void setStationUnits(MeasureUnit &unit);
+
+        static float currentStationValue(float value, libxtide::Units::PredictionUnits &srcUnit, MeasureUnit &dstUnit);
 
     public:
         Station() = default;
+
         Station(Station &station) = default;
+
         Station(Station &&station) = default;
+
         explicit Station(libxtide::StationRef *stationRef);
+
         virtual ~Station();
 
         static TimePoint now();
@@ -66,36 +74,12 @@ namespace mdr {
          *
          * @param epoch the time point of the prediction window start
          * @param duration the length of the prediction window
-         * @param unit measurement unit in meters for tide stations and mps for current stations(todo: double check MPS)
+         * @param unit measurement unit in meters/kph , feet/mph, feet/kts
          * @return the tidal prediction
          */
         std::vector<StationPrediction<float>> getPredictionRaw(TimePoint epoch = now(),
                                                                DurationSeconds duration = twentyFourHours(),
                                                                MeasureUnit unit = metric);
-
-        /**
-         * Get a tidal prediction for a window of time containing a string value representing the tide or current level in
-         * in human readable text.
-         *
-         * @param epoch the time point of the prediction window start
-         * @param duration the length of the prediction window
-         * @param unit measurement unit in meters for tide stations and mps for current stations(todo: double check MPS)
-         * @return the tidal prediction
-         */
-        std::vector<StationPrediction<std::string>> getPredictionPlain(TimePoint epoch = now(),
-                                                               DurationSeconds duration = twentyFourHours(),
-                                                               MeasureUnit unit = metric);
-
-        /**
-         * Get an SVG displaying a small ("clock") graph of the tide or current level.
-         * @param epoch the time point of the prediction window start
-         * @param duration the length of the prediction window
-         * @param unit measurement unit in meters for tide stations and mps for current stations(todo: double check MPS)
-         * @return the SVG
-         */
-        std::string getPredictionClockSVG(TimePoint epoch = now(),
-                                          DurationSeconds duration = twentyFourHours(),
-                                          MeasureUnit unit = metric);
 
         /**
          * @return the type of station.

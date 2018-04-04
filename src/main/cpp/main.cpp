@@ -13,18 +13,12 @@ void printStationInformation(Optional<Station> &station) {
         cout << "Station latitude: " << station.getLatitude() << " longitude: " << station.getLongitude() << endl;
         cout << "Station timestamp" << station.getTimeStamp() << endl;
 
-        auto plainPrediction = station.getPredictionPlain();
-        cout << "Station plain prediction: " << endl;
-        for_each(plainPrediction.begin(), plainPrediction.end(), [](StationPrediction<string> &data) {
-            cout << data.formatTime() << " ------value-----> " << data.value << endl;
-        });
 
         auto rawPrediction = station.getPredictionRaw();
         cout << "Station raw prediction: " << endl;
         for_each(rawPrediction.begin(), rawPrediction.end(), [](StationPrediction<float> &data) {
             cout << data.formatTime() << " ------value-----> " << data.value << endl;
         });
-        cout << "Station clock prediction SVG: " << station.getPredictionClockSVG() << endl;
     });
 }
 
@@ -88,14 +82,12 @@ int main(int argc, char **argv) {
         printStationInformation(nearestCurrent);
 
         cout << "station count:" << stations.size() << endl;
-
         cout << "station count:" << tnc.stationCount() << endl;
-        cout << "names:" << tnc.stationNames().back() << endl;
 
-        auto names = tnc.stationNames();
-        for_each(names.begin(), names.end(), [](string &name) {
-            cout << "names" << name << endl;
-        });
+//        auto names = tnc.stationNames();
+//        for_each(names.begin(), names.end(), [](string &name) {
+//            cout << "name: " << name << endl;
+//        });
 
 //        {
 //            auto station = tnc.findStationByName("San Diego Bay Entrance, California Current");

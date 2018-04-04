@@ -2,8 +2,8 @@
 
 namespace mdr {
     enum MeasureUnit {
-        metric,
-        statute,
-        nautical
+        metric,  // meters / kph
+        statute, // feet / mph
+        nautical // feet / kts
     };
 }
