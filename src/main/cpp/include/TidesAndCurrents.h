@@ -43,16 +43,18 @@ namespace mdr {
         /**
          * Find a station by its exact name.
          * @param name the exact name of the station.
+         * @param type the type of the stations to find
          * @return an optional station.
          */
-        Optional<Station> findStationByName(const char *name);
+        Optional<Station> findStationByName(const char *name,
+                                            StationType type);
 
         /**
          * Find a station nearest to a position.
          *
          * @param lat latitude
          * @param lng longitude
-         * @param type
+         * @param type the type of the stations to find
          * @return an optional nearest station.
          */
         Optional<Station> findNearestStation(double lat,

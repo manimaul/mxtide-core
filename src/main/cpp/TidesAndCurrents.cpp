@@ -43,13 +43,11 @@ vector<string> TidesAndCurrents::stationNames() {
  * @param name the station name.
  * @return the station or nullptr if it doesn't exist.
  */
-Optional<Station> TidesAndCurrents::findStationByName(const char *name) {
-    libxtide::StationRef *stationRef = stationIndex->getStationRefByName(Dstr(name));
-    if (stationRef) {
-        return Optional<Station>(Station(stationRef));
-    } else {
-        return Optional<Station>();
-    }
+Optional<Station> TidesAndCurrents::findStationByName(const char *name, StationType type) {
+    auto station = find_if(stationIndex->begin(), stationIndex->end(), [&](libxtide::StationRef *ref) {
+        return stationTypeEquals(type, ref) && ref->name == name;
+    });
+    return *station == nullptr ? Optional<Station>() : Optional<Station>(Station(*station));
 }
 
 Optional<Station> TidesAndCurrents::findNearestStation(double lat,
