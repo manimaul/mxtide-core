@@ -3,6 +3,7 @@
 #include "tcd.h"
 #include "tide_db_header.h"
 #include "tide_db_default.h"
+#include <unistd.h>
 
 /* This should be done with stdbool.h, but VC doesn't have it. */
 /* Using crappy old int, must be careful not to 'require' a 64-bit value. */
