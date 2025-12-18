@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
         });
 
         pt.resetStart();
-        auto nearestByName = tnc.findStationByName(nearestTideName.c_str());
+        auto nearestByName = tnc.findStationByName(nearestTideName.c_str(), stationTypeTide);
         pt.stop("nearest station re-fetched by name");
 
         pt.resetStart();

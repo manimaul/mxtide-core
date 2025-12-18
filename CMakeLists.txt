@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.4.1)
+cmake_minimum_required(VERSION 4.1.2)
 
 if (NOT ANDROID)
     set(CMAKE_CXX_STANDARD 17)
+    project(xtide)
 endif ()
 
 set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/src/main/cpp/lib/)
